@@ -56,7 +56,10 @@ import et.frectonz.kimem.core.model.res
 import et.frectonz.kimem.core.network.Router
 import et.frectonz.kimem.di.container
 import et.frectonz.kimem.ui.Load
+import et.frectonz.kimem.ui.Crumb
 import et.frectonz.kimem.ui.Route
+import et.frectonz.kimem.ui.leafCrumbs
+import et.frectonz.kimem.ui.menuCrumbs
 import et.frectonz.kimem.ui.SmsAction
 import et.frectonz.kimem.ui.components.ButtonRow
 import et.frectonz.kimem.ui.components.ErrorBox
@@ -131,6 +134,7 @@ class SmsInboxViewModel(private val repository: RouterRepository) : ViewModel() 
 @Composable
 fun SmsInboxScreen(
     onNavigate: (Route) -> Unit,
+    onCrumb: (Route) -> Unit,
     onBack: () -> Unit,
     vm: SmsInboxViewModel = viewModel(factory = SmsInboxViewModel.Factory),
 ) {
@@ -139,7 +143,7 @@ fun SmsInboxScreen(
     Scaffold(
         containerColor = paper(),
         topBar = {
-            MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.inbox_title)), onBack = onBack) {
+            MonoTopBar(leafCrumbs(listOf("get", "sms", "list")), onCrumb = onCrumb, onBack = onBack) {
                 MonoIconButton(Icons.Filled.Refresh, stringResource(R.string.refresh), onClick = vm::load, enabled = state !is Load.Loading)
             }
         },
@@ -254,6 +258,7 @@ class SmsMessageViewModel(
 @Composable
 fun SmsMessageScreen(
     onNavigate: (Route) -> Unit,
+    onCrumb: (Route) -> Unit,
     onBack: () -> Unit,
     vm: SmsMessageViewModel = viewModel(factory = SmsMessageViewModel.Factory),
 ) {
@@ -267,7 +272,7 @@ fun SmsMessageScreen(
     Scaffold(
         containerColor = paper(),
         topBar = {
-            MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.message_screen_title, vm.id)), onBack = onBack) {
+            MonoTopBar(menuCrumbs(listOf("get", "sms")) + Crumb("show", Route.SmsShow) + Crumb(vm.id.toString()), onCrumb = onCrumb, onBack = onBack) {
                 MonoIconButton(
                     Icons.Filled.Refresh,
                     stringResource(R.string.refresh),
@@ -342,13 +347,13 @@ fun SmsMessageScreen(
 }
 
 @Composable
-fun SmsShowScreen(onNavigate: (Route) -> Unit, onBack: () -> Unit) {
+fun SmsShowScreen(onNavigate: (Route) -> Unit, onCrumb: (Route) -> Unit, onBack: () -> Unit) {
     var id by rememberSaveable { mutableStateOf("") }
     val parsed = id.trim().toIntOrNull()
 
     Scaffold(
         containerColor = paper(),
-        topBar = { MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.show_title)), onBack = onBack) },
+        topBar = { MonoTopBar(leafCrumbs(listOf("get", "sms", "show")), onCrumb = onCrumb, onBack = onBack) },
     ) { inner ->
         Column(
             Modifier
@@ -422,7 +427,7 @@ class SmsSelectViewModel(
 }
 
 @Composable
-fun SmsSelectScreen(onBack: () -> Unit, vm: SmsSelectViewModel = viewModel(factory = SmsSelectViewModel.Factory)) {
+fun SmsSelectScreen(onCrumb: (Route) -> Unit, onBack: () -> Unit, vm: SmsSelectViewModel = viewModel(factory = SmsSelectViewModel.Factory)) {
     val state by vm.uiState.collectAsStateWithLifecycle()
     var selector by rememberSaveable { mutableStateOf("") }
     var confirm by rememberSaveable { mutableStateOf(false) }
@@ -435,7 +440,7 @@ fun SmsSelectScreen(onBack: () -> Unit, vm: SmsSelectViewModel = viewModel(facto
 
     Scaffold(
         containerColor = paper(),
-        topBar = { MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.select_title, action.command)), onBack = onBack) },
+        topBar = { MonoTopBar(leafCrumbs(listOf("post", "sms", action.command)), onCrumb = onCrumb, onBack = onBack) },
     ) { inner ->
         Column(
             Modifier
@@ -554,12 +559,12 @@ class SendSmsViewModel(
 }
 
 @Composable
-fun SendSmsScreen(onBack: () -> Unit, vm: SendSmsViewModel = viewModel(factory = SendSmsViewModel.Factory)) {
+fun SendSmsScreen(onCrumb: (Route) -> Unit, onBack: () -> Unit, vm: SendSmsViewModel = viewModel(factory = SendSmsViewModel.Factory)) {
     val state by vm.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = paper(),
-        topBar = { MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.send_title)), onBack = onBack) },
+        topBar = { MonoTopBar(leafCrumbs(listOf("post", "sms", "send")), onCrumb = onCrumb, onBack = onBack) },
     ) { inner ->
         Column(
             Modifier

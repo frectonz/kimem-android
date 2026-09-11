@@ -10,19 +10,19 @@ import et.frectonz.kimem.core.network.Router
 import kotlinx.serialization.Serializable
 
 @Keep
-enum class ReportKind(@StringRes val title: Int, @StringRes val description: Int, val command: String) {
-    Info(R.string.kind_info, R.string.desc_info, "get › info"),
-    System(R.string.kind_system, R.string.desc_system, "get › system"),
-    Signal(R.string.kind_signal, R.string.desc_signal, "get › signal"),
-    Internet(R.string.kind_internet, R.string.desc_internet, "get › internet"),
-    Apn(R.string.kind_apn, R.string.desc_apn, "get › apn"),
-    Device(R.string.kind_device, R.string.desc_device, "get › device"),
-    Wifi(R.string.kind_wifi, R.string.desc_wifi, "get › wifi"),
-    Devices(R.string.kind_devices, R.string.desc_devices, "get › devices"),
-    SmsInfo(R.string.kind_sms_info, R.string.desc_sms_info, "get › sms › info"),
-    Syslog(R.string.kind_syslog, R.string.desc_syslog, "get › syslog"),
-    Airtime(R.string.kind_airtime, R.string.desc_airtime, "get › airtime"),
-    Power(R.string.kind_power, R.string.desc_power, "get › power"),
+enum class ReportKind(@StringRes val title: Int, @StringRes val description: Int, val path: List<String>) {
+    Info(R.string.kind_info, R.string.desc_info, listOf("get", "info")),
+    System(R.string.kind_system, R.string.desc_system, listOf("get", "system")),
+    Signal(R.string.kind_signal, R.string.desc_signal, listOf("get", "signal")),
+    Internet(R.string.kind_internet, R.string.desc_internet, listOf("get", "internet")),
+    Apn(R.string.kind_apn, R.string.desc_apn, listOf("get", "apn")),
+    Device(R.string.kind_device, R.string.desc_device, listOf("get", "device")),
+    Wifi(R.string.kind_wifi, R.string.desc_wifi, listOf("get", "wifi")),
+    Devices(R.string.kind_devices, R.string.desc_devices, listOf("get", "devices")),
+    SmsInfo(R.string.kind_sms_info, R.string.desc_sms_info, listOf("get", "sms", "info")),
+    Syslog(R.string.kind_syslog, R.string.desc_syslog, listOf("get", "syslog")),
+    Airtime(R.string.kind_airtime, R.string.desc_airtime, listOf("get", "airtime")),
+    Power(R.string.kind_power, R.string.desc_power, listOf("get", "power")),
 }
 
 suspend fun Router.fetchReport(kind: ReportKind): Show = when (kind) {
@@ -74,3 +74,11 @@ sealed interface Route {
     @Serializable
     data class Ussd(val code: String = "") : Route
 }
+
+data class Crumb(val label: String, val target: Route? = null)
+
+fun menuCrumbs(path: List<String>): List<Crumb> =
+    listOf(Crumb("kimem", Route.Menu())) + path.indices.map { i -> Crumb(path[i], Route.Menu(path.take(i + 1))) }
+
+fun leafCrumbs(path: List<String>): List<Crumb> =
+    menuCrumbs(path.dropLast(1)) + Crumb(path.last())

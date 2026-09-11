@@ -38,6 +38,8 @@ import et.frectonz.kimem.core.model.Settings
 import et.frectonz.kimem.core.model.ThemeMode
 import et.frectonz.kimem.core.model.res
 import et.frectonz.kimem.di.container
+import et.frectonz.kimem.ui.Route
+import et.frectonz.kimem.ui.leafCrumbs
 import et.frectonz.kimem.ui.components.LoadingBox
 import et.frectonz.kimem.ui.components.MonoButton
 import et.frectonz.kimem.ui.components.MonoSegmented
@@ -88,13 +90,13 @@ class SettingsViewModel(
 }
 
 @Composable
-fun SettingsScreen(onBack: () -> Unit, vm: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)) {
+fun SettingsScreen(onCrumb: (Route) -> Unit, onBack: () -> Unit, vm: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)) {
     val form by vm.form.collectAsStateWithLifecycle()
     var showPassword by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         containerColor = paper(),
-        topBar = { MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.settings_title)), onBack = onBack) },
+        topBar = { MonoTopBar(leafCrumbs(listOf(stringResource(R.string.settings))), onCrumb = onCrumb, onBack = onBack) },
     ) { inner ->
         Column(
             Modifier

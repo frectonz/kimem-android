@@ -3,6 +3,8 @@ package et.frectonz.kimem.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +36,7 @@ import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,6 +56,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import et.frectonz.kimem.R
+import et.frectonz.kimem.ui.Crumb
+import et.frectonz.kimem.ui.Route
 
 @Composable
 fun ink(): Color = MaterialTheme.colorScheme.onBackground
@@ -253,6 +258,75 @@ fun MonoTopBar(
     onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
+    MonoTopBarFrame(onBack = onBack, actions = actions) {
+        Text(
+            title.uppercase(),
+            style = MaterialTheme.typography.titleMedium,
+            color = ink(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+@Composable
+fun MonoTopBar(
+    crumbs: List<Crumb>,
+    onCrumb: (Route) -> Unit,
+    onBack: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+) {
+    MonoTopBarFrame(onBack = onBack, actions = actions) {
+        Breadcrumbs(crumbs, onCrumb)
+    }
+}
+
+@Composable
+fun Breadcrumbs(crumbs: List<Crumb>, onCrumb: (Route) -> Unit, modifier: Modifier = Modifier) {
+    val ink = ink()
+    val paper = paper()
+    val scroll = rememberScrollState()
+
+    LaunchedEffect(crumbs) { scroll.scrollTo(scroll.maxValue) }
+
+    Row(modifier.horizontalScroll(scroll), verticalAlignment = Alignment.CenterVertically) {
+        crumbs.forEachIndexed { index, crumb ->
+            if (index > 0) {
+                Text("›", style = MaterialTheme.typography.titleMedium, color = ink, modifier = Modifier.padding(horizontal = 4.dp))
+            }
+            val target = crumb.target
+            if (target == null) {
+                Text(
+                    crumb.label.uppercase(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = ink,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 4.dp),
+                )
+            } else {
+                val interaction = remember { MutableInteractionSource() }
+                val pressed by interaction.collectIsPressedAsState()
+                Text(
+                    crumb.label.uppercase(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (pressed) paper else ink,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .background(if (pressed) ink else paper)
+                        .clickable(interactionSource = interaction, indication = null) { onCrumb(target) }
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MonoTopBarFrame(
+    onBack: (() -> Unit)?,
+    actions: @Composable RowScope.() -> Unit,
+    title: @Composable () -> Unit,
+) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -272,14 +346,7 @@ fun MonoTopBar(
             } else {
                 Spacer(Modifier.width(16.dp))
             }
-            Text(
-                title.uppercase(),
-                style = MaterialTheme.typography.titleMedium,
-                color = ink(),
-                modifier = Modifier.weight(1f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Box(Modifier.weight(1f)) { title() }
             actions()
             Spacer(Modifier.width(4.dp))
         }

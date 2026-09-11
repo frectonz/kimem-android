@@ -42,6 +42,9 @@ fun KimemApp(notices: NoticeCenter) {
 
     val navigate: (Route) -> Unit = { navController.navigate(it) }
     val back: () -> Unit = { navController.popBackStack() }
+    val jump: (Route) -> Unit = { target ->
+        if (!navController.popBackStack(target, inclusive = false)) navController.navigate(target)
+    }
 
     Box(
         Modifier
@@ -49,15 +52,15 @@ fun KimemApp(notices: NoticeCenter) {
             .background(paper())
     ) {
         NavHost(navController = navController, startDestination = Route.Menu()) {
-            composable<Route.Menu> { MenuScreen(onNavigate = navigate, onBack = back) }
-            composable<Route.Settings> { SettingsScreen(onBack = back) }
-            composable<Route.Report> { ReportScreen(onBack = back) }
-            composable<Route.SmsInbox> { SmsInboxScreen(onNavigate = navigate, onBack = back) }
-            composable<Route.SmsShow> { SmsShowScreen(onNavigate = navigate, onBack = back) }
-            composable<Route.SmsMessage> { SmsMessageScreen(onNavigate = navigate, onBack = back) }
-            composable<Route.SendSms> { SendSmsScreen(onBack = back) }
-            composable<Route.SmsSelect> { SmsSelectScreen(onBack = back) }
-            composable<Route.Ussd> { UssdScreen(onBack = back) }
+            composable<Route.Menu> { MenuScreen(onNavigate = navigate, onCrumb = jump, onBack = back) }
+            composable<Route.Settings> { SettingsScreen(onCrumb = jump, onBack = back) }
+            composable<Route.Report> { ReportScreen(onCrumb = jump, onBack = back) }
+            composable<Route.SmsInbox> { SmsInboxScreen(onNavigate = navigate, onCrumb = jump, onBack = back) }
+            composable<Route.SmsShow> { SmsShowScreen(onNavigate = navigate, onCrumb = jump, onBack = back) }
+            composable<Route.SmsMessage> { SmsMessageScreen(onNavigate = navigate, onCrumb = jump, onBack = back) }
+            composable<Route.SendSms> { SendSmsScreen(onCrumb = jump, onBack = back) }
+            composable<Route.SmsSelect> { SmsSelectScreen(onCrumb = jump, onBack = back) }
+            composable<Route.Ussd> { UssdScreen(onCrumb = jump, onBack = back) }
         }
 
         SnackbarHost(

@@ -19,7 +19,6 @@
     <string name="working">Working</string>
     <string name="no_entries">No entries</string>
     <string name="unknown_command">Unknown command</string>
-    <string name="breadcrumb">kimem › %1$s</string>
 
     <string name="commands">Commands</string>
     <string name="quick_actions">Quick actions</string>
@@ -209,26 +208,21 @@
     <string name="marked_as_read">Marked as read</string>
     <string name="action_failed">%1$s failed: %2$s</string>
 
-    <string name="inbox_title">get › sms › list</string>
     <string name="inbox">inbox</string>
     <string name="inbox_empty">Inbox is empty</string>
     <string name="no_unread">No unread messages</string>
-    <string name="message_screen_title">get › sms › show %1$d</string>
     <string name="reply">Reply</string>
     <string name="mark_read">Mark read</string>
     <string name="delete">Delete</string>
     <string name="delete_message_title">Delete message</string>
     <string name="delete_message_body" tools:ignore="PluralsCandidate">Message %1$d will be deleted from the router.</string>
     <string name="delete_all_body">Every message in the inbox will be deleted from the router.</string>
-    <string name="show_title">get › sms › show</string>
     <string name="message_id_label">Message ID</string>
     <string name="message_id_placeholder">715</string>
     <string name="show">Show</string>
     <string name="browse_inbox">Browse inbox instead</string>
-    <string name="select_title">post › sms › %1$s</string>
     <string name="selector_label">Message ID or \"all\"</string>
     <string name="selector_placeholder">715 or all</string>
-    <string name="send_title">post › sms › send</string>
     <string name="recipient_number">Recipient number</string>
     <string name="recipient_placeholder">+251900000000</string>
     <string name="message">Message</string>
@@ -239,7 +233,6 @@
     <string name="sending">Sending…</string>
     <string name="send">Send</string>
 
-    <string name="ussd_title">post › ussd</string>
     <string name="ussd_code_label">USSD code or built-in name</string>
     <string name="ussd_placeholder">*704# or balance</string>
     <string name="dial">Dial</string>
@@ -253,7 +246,6 @@
     <string name="reply_label">&gt; reply</string>
     <string name="dial_tag">dial %1$s</string>
 
-    <string name="settings_title">settings</string>
     <string name="router_section">Router</string>
     <string name="address">Address</string>
     <string name="address_placeholder">192.168.0.1</string>

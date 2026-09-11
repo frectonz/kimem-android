@@ -56,6 +56,7 @@ import et.frectonz.kimem.ui.components.MonoTopBar
 import et.frectonz.kimem.ui.components.ink
 import et.frectonz.kimem.ui.components.paper
 import et.frectonz.kimem.ui.fetchReport
+import et.frectonz.kimem.ui.leafCrumbs
 import et.frectonz.kimem.ui.load
 import et.frectonz.kimem.ui.string
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -96,14 +97,14 @@ class ReportViewModel(
 }
 
 @Composable
-fun ReportScreen(onBack: () -> Unit, vm: ReportViewModel = viewModel(factory = ReportViewModel.Factory)) {
+fun ReportScreen(onCrumb: (Route) -> Unit, onBack: () -> Unit, vm: ReportViewModel = viewModel(factory = ReportViewModel.Factory)) {
     val state by vm.uiState.collectAsStateWithLifecycle()
     val kind = vm.kind
 
     Scaffold(
         containerColor = paper(),
         topBar = {
-            MonoTopBar(stringResource(R.string.breadcrumb, kind.command), onBack = onBack) {
+            MonoTopBar(leafCrumbs(kind.path), onCrumb = onCrumb, onBack = onBack) {
                 MonoIconButton(
                     Icons.Filled.Refresh,
                     stringResource(R.string.refresh),

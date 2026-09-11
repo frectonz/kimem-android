@@ -57,6 +57,7 @@ import et.frectonz.kimem.ui.components.MonoTopBar
 import et.frectonz.kimem.ui.components.SectionHeader
 import et.frectonz.kimem.ui.components.ink
 import et.frectonz.kimem.ui.components.paper
+import et.frectonz.kimem.ui.menuCrumbs
 import et.frectonz.kimem.ui.resolveMenu
 import et.frectonz.kimem.ui.uiText
 import kotlinx.coroutines.CancellationException
@@ -141,6 +142,7 @@ class MenuViewModel(
 @Composable
 fun MenuScreen(
     onNavigate: (Route) -> Unit,
+    onCrumb: (Route) -> Unit,
     onBack: () -> Unit,
     vm: MenuViewModel = viewModel(factory = MenuViewModel.Factory),
 ) {
@@ -159,7 +161,7 @@ fun MenuScreen(
                     MonoIconButton(Icons.Filled.Settings, stringResource(R.string.settings), onClick = { onNavigate(Route.Settings) })
                 }
             } else {
-                MonoTopBar(stringResource(R.string.breadcrumb, path.joinToString(" › ")), onBack = onBack)
+                MonoTopBar(menuCrumbs(path), onCrumb = onCrumb, onBack = onBack)
             }
         },
     ) { inner ->

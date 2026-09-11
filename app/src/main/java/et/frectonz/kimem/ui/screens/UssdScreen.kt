@@ -55,6 +55,7 @@ import et.frectonz.kimem.core.model.ussdBuiltinsHelp
 import et.frectonz.kimem.core.network.Router
 import et.frectonz.kimem.di.container
 import et.frectonz.kimem.ui.Route
+import et.frectonz.kimem.ui.leafCrumbs
 import et.frectonz.kimem.ui.components.ErrorBox
 import et.frectonz.kimem.ui.components.LoadingBox
 import et.frectonz.kimem.ui.components.MonoBox
@@ -197,13 +198,13 @@ class UssdViewModel(
 }
 
 @Composable
-fun UssdScreen(onBack: () -> Unit, vm: UssdViewModel = viewModel(factory = UssdViewModel.Factory)) {
+fun UssdScreen(onCrumb: (Route) -> Unit, onBack: () -> Unit, vm: UssdViewModel = viewModel(factory = UssdViewModel.Factory)) {
     val state by vm.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = paper(),
         topBar = {
-            MonoTopBar(stringResource(R.string.breadcrumb, stringResource(R.string.ussd_title)), onBack = onBack) {
+            MonoTopBar(leafCrumbs(listOf("post", "ussd")), onCrumb = onCrumb, onBack = onBack) {
                 when (state.phase) {
                     UssdPhase.Idle -> Unit
                     UssdPhase.Active -> MonoButton(stringResource(R.string.end), vm::end, compact = true)
