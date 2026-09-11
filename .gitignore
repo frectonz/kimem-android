@@ -15,3 +15,5 @@
 local.properties
 .kotlin/
 CODEBASE.html
+keystore.properties
+/dist
