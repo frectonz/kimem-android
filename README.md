@@ -24,4 +24,6 @@ Dark mode:
 <p align="center">
   <img src="docs/screenshots/home-dark.png" width="200" alt="Home screen in dark mode">
   <img src="docs/screenshots/get-dark.png" width="200" alt="The get/ menu in dark mode">
+  <img src="docs/screenshots/ussd-dark.png" width="200" alt="USSD dial form in dark mode">
+  <img src="docs/screenshots/settings-dark.png" width="200" alt="Settings in dark mode">
 </p>
